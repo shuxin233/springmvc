@@ -1,7 +1,9 @@
 package com.springmvc.controller;
 
 
+import com.springmvc.domain.Brand;
 import com.springmvc.domain.Shop;
+import com.springmvc.service.BrandService;
 import com.springmvc.service.ShopService;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Update;
@@ -20,11 +22,21 @@ import java.io.IOException;
 public class ShopController {
     @Autowired
     private ShopService shopService;
-
+    @Autowired
+    private BrandService brandService;
 
     @RequestMapping("/insertShop")
-    public String insertShop(Shop shop) throws IOException {
-        shopService.insertShop(shop);
+    public String insertShop(HttpServletRequest request) throws IOException {
+        int newsid=Integer.parseInt(request.getParameter("newsid"));
+        String newsname=request.getParameter("newsname");
+        int newnum=Integer.parseInt(request.getParameter("newnum"));
+        int newprice=Integer.parseInt(request.getParameter("newprice"));
+        String brand=request.getParameter("brand");
+
+        Brand brand1=brandService.FindBrand_shop(brand);
+        Shop newshop=new Shop(newsid,newsname,newnum,newprice,"aaa",brand1.getBid());
+        shopService.insertShop(newshop);//添加
+
         return "index";
     }
 

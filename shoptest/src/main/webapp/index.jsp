@@ -63,16 +63,34 @@
 <div class="dropdown">
     <button class="dropbtn">请选择品牌</button>
     <div class="dropdown-content">
-        <a href="findShop?bname=小米">小米</a>
-        <a href="findShop?bname=Apple">Apple</a>
-        <a href="findShop?bname=华为">华为</a>
+        <a onclick="findBrand('小米')">小米</a>
+        <a onclick="findBrand('Apple')">Apple</a>
+        <a onclick="findBrand('华为')">华为</a>
     </div>
 </div>
 
-
-
-
 <div class="container">
+    <h3 style="text-align: center">${brand.bname}商品信息</h3>
+    <table class="table table-bordered table-hover  table-striped table-condensed" id="my_table">
+        <tr class="success">
+            <td>sid</td><td>sname</td><td>num</td><td>price</td><td>修改信息</td>
+        </tr>
+    </table>
+    <table class="table table-bordered table-hover  table-striped table-condensed" >
+        <tr class="success">添加商品信息</tr>
+    <tr class="success">
+        <form action="insertShop">
+            <td><input type="text" name="newsid" placeholder="sid"></td>
+            <td><input type="text" name="newsname" placeholder="sname"></td>
+            <td><input type="text" name="newnum"placeholder="num"></td>
+            <td><input type="text" name="newprice"placeholder="price"></td>
+            <td><input type="text" name="brand" placeholder="品牌"></td>
+            <td><input type="submit" value="提交"></td>
+        </form>
+    </tr>
+    </table>
+</div>
+<%--<div class="container">
     <h3 style="text-align: center">${brand.bname}商品信息</h3>
     <table class="table table-bordered table-hover  table-striped table-condensed">
         <tr class="success">
@@ -80,14 +98,13 @@
         </tr>
         <c:forEach items="${brand.shops}" var="shop">
             <tr>
-
-                  <%--  <div id="show" style="display: block">
+                  &lt;%&ndash;  <div id="show" style="display: block">
                     <td>${shop.sname}</td>
                     <td>${shop.num}</td>
                     <td>${shop.price}</td>
                     <td>${shop.pic}</td>
                     <td><a class="btn btn-default btn-sm" onclick="update()">修改</a>
-                    </div>--%>
+                    </div>&ndash;%&gt;
                         <form action="updateShop" method="post">
                             <td><input value="${shop.sid}" name="sid" style="display: none">${shop.sid}</td>
                         <td><input value="${shop.sname}" name="sname" style="display: none">${shop.sname}</td>
@@ -100,17 +117,69 @@
             </tr>
         </c:forEach>
     </table>
-</div>
+</div>--%>
 
-<script>
 
-    function update() {
-alert(1)
+
+
+<script type="text/javascript">
+
+
+    
+    function findBrand(bname) {
+        $(".success1").empty();
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: "findShop?bname="+bname,
+                success: function(data) {
+                    console.log(data.brand.shops);
+                    for(let i=0;i<data.brand.shops.length;i++){
+                        var tr=document.createElement('tr');//创建tr标签
+                        tr.className="success1";
+                        document.getElementById("my_table").appendChild(tr);//把tr标签放进table中
+
+                        var td=document.createElement('td');//创建sid的td标签
+                        tr.appendChild(td);//将td添加为tr的子标签
+                        td.className="table-bordered";
+                        td.innerHTML=data.brand.shops[i].sid;//賦值
+
+                        var td=document.createElement('td');//创建sname的td标签
+                        tr.appendChild(td);//将td添加为tr的子标签
+                        td.className="table-bordered";
+                        td.innerHTML=data.brand.shops[i].sname;
+
+                        var td=document.createElement('td');//创建num的td标签
+                        tr.appendChild(td);//将td添加为tr的子标签
+                        td.className="table-bordered";
+                        td.innerHTML=data.brand.shops[i].num;
+
+                        var td=document.createElement('td');//创建price的td标签
+                        tr.appendChild(td);//将td添加为tr的子标签
+                        td.className="table-bordered";
+                        td.innerHTML=data.brand.shops[i].price;
+
+
+                        var td=document.createElement('td');//创建date的td标签
+                        var inputUpdata=document.createElement("input");//创建修改按钮
+                        var inputDelete=document.createElement("input");//创建删除按钮
+                        inputUpdata.type="button";inputUpdata.value="修改";
+                        inputDelete.type="button";inputDelete.value="删除";
+                        td.className="table-bordered";
+                        tr.appendChild(td);//将td添加为tr的子标签
+                        td.appendChild(inputUpdata);//将input添加为td的子标签
+                        td.appendChild(inputDelete);//将input添加为td的子标签
+                    }
+                }
+            });
+
+
     }
 </script>
 
-<script src="js/jquery-3.4.1.js"></script>
-<script src="js/bootstrap.min.js"></script>
+
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/bootstrap.js"></script>
 
 
 </body>
